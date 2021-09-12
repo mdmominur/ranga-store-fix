@@ -1,5 +1,6 @@
 const loadProducts = () => {
-  const url = `https://fakestoreapi.com/products`;
+  // const url = `https://fakestoreapi.com/products`;
+  const url = `/data.txt`;
   fetch(url)
     .then((response) => response.json())
     .then((data) => showProducts(data));
@@ -8,21 +9,23 @@ loadProducts();
 
 // show all product in UI 
 const showProducts = (products) => {
-  console.log(products);
+  console.log(products)
   const allProducts = products.map((pd) => pd);
   for (const product of allProducts) {
     const image = product.image;
     const div = document.createElement("div");
     div.classList.add("product");
-    div.innerHTML = `<div class="single-product">
+  
+    div.innerHTML = `<div class="single-product shadow rounded p-4">
       <div>
     <img class="product-image" src=${image}></img>
       </div>
       <h3>${product.title}</h3>
       <p>Category: ${product.category}</p>
+      <p><i class="fas fa-star"></i>${product.rating.rate} (${product.rating.count} peoples)</p>
       <h2>Price: $ ${product.price}</h2>
       <button onclick="addToCart(${product.id},${product.price})" id="addToCart-btn" class="buy-now btn btn-success">add to cart</button>
-      <button id="details-btn" class="btn btn-danger">Details</button></div>
+      <button id="details-btn" onclick="showDetails(${product.id})" class="btn btn-danger">Details</button></div>
       `;
     document.getElementById("all-products").appendChild(div);
   }
@@ -83,3 +86,11 @@ const updateTotal = () => {
     getInputValue("total-tax");
   document.getElementById("total").innerText = parseFloat(grandTotal).toFixed(2);
 };
+
+
+function showDetails(id){
+  const url = `https://fakestoreapi.com/products/${id}`
+  fetch(url)
+  .then(res => res.json())
+  .then(data => console.log(data));
+}
